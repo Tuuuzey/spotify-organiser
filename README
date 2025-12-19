@@ -1,0 +1,3 @@
+how to start:
+fastapi dev backend\main.py
+npm run dev

@@ -18,15 +18,3 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIFY_CLIENT_ID,
                                                scope=scope))
 
 
-
-# playlists = sp.current_user_playlists()
-# for playlist in playlists['items']:
-#     print("Playlist:", playlist['name'])
-
-# playlist4 = playlists['items'][3]
-# id_pl4 = playlist4['id']
-# res = sp.playlist_items(id_pl4)
-# print(res['items']['track'])
-# # for idx, item in enumerate(res['items']):
-# #   track = item['track']
-# #   print(track)
