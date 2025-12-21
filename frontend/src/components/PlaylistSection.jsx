@@ -1,4 +1,4 @@
-export default function Playlist({ name, img, tracks_amount }) {
+export default function PlaylistSection({ name, img, tracks_amount, goToPlaylist }) {
   return (
     <div className="w-[32rem] h-[150px] rounded-full bg-violet-600 p-4 flex items-center justify-between">
       <img src={img} className="w-[100px] h-[100px] object-cover rounded-full" />
@@ -8,7 +8,7 @@ export default function Playlist({ name, img, tracks_amount }) {
         <p className="text-white">Songs: {tracks_amount}</p>
       </div>
 
-      <button className="bg-white text-violet-600 font-semibold px-4 py-2 rounded-full shadow-md hover:bg-violet-50 transition">
+      <button className="bg-white text-violet-600 font-semibold px-4 py-2 rounded-full shadow-md hover:bg-violet-50 transition" onClick={goToPlaylist}>
         Go to
       </button>
     </div>

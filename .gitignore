@@ -38,3 +38,5 @@ coverage/
 # Optional: Ignore package-lock/yarn.lock if you prefer not to commit them
 # package-lock.json
 # yarn.lock
+
+todo.txt

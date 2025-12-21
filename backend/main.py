@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from spotify_auth import sp
-from fastapi.responses import RedirectResponse
-from fastapi import Request
 
 app = FastAPI()
 
@@ -15,7 +13,7 @@ app.add_middleware(
 )
 
 
-# returns id name img tracks_amount of all playlists
+# return id name img tracks_amount of all playlists
 @app.get("/playlists")
 def get_playlist_data():
     res = []
@@ -30,16 +28,27 @@ def get_playlist_data():
         res.append(data)
     return res
 
-# zreturn tracks of given playlist
+# @app.get('/test')
+# def test():
+    # return sp.playlist_items('0oyi0zXNdoTVpLGeobrGjD')['items'][0]['track']['external_urls']['spotify'] LINK TO MUSIC
+    # return sp.playlist_items('0oyi0zXNdoTVpLGeobrGjD')['items'][0]['track']['album']['images'][0]['url'] LINK TO IMAGE URL
+
+
+# return tracks of given playlist
 @app.get("/playlist/{playlist_id}")
 def get_playlist_tracks(playlist_id: str):
     all_tracks = []
     results = sp.playlist_items(playlist_id)
+
     while results:
         all_tracks.extend(results['items'])
         results = sp.next(results) if results['next'] else None
 
-    artist_ids = list({item['track']['artists'][0]['id'] for item in all_tracks if item['track'] and item['track']['artists']})
+    artist_ids = list({
+        item['track']['artists'][0]['id']
+        for item in all_tracks
+        if item.get('track') and item['track'].get('artists')
+    })
 
     artist_genres = {}
     for i in range(0, len(artist_ids), 50):
@@ -50,13 +59,25 @@ def get_playlist_tracks(playlist_id: str):
 
     res = []
     for item in all_tracks:
-        track = item['track']
+        track = item.get('track')
         if not track:
             continue
+
         artist_id = track['artists'][0]['id']
+
         res.append({
             "track": track['name'],
-            "genres": artist_genres.get(artist_id, ["Unknown"])
+            "genres": artist_genres.get(artist_id, ["Unknown"]),
+            "spotify_url": track['external_urls']['spotify'],
+            "image_url": (
+                track['album']['images'][0]['url']
+                if track['album']['images']
+                else None
+            )
         })
 
-    return {"playlist_id": playlist_id, "tracks_count": len(res), "tracks": res}
+    return {
+        "playlist_id": playlist_id,
+        "tracks_count": len(res),
+        "tracks": res
+    }
